@@ -1,0 +1,19 @@
+[project]
+name = "backend"
+created = "2025-09-14T11:34:41.644316"
+framework_version = "0.0.7"
+
+[cli]
+version = "1.0.0"
+command = "co init"
+template = "none"
+
+[agent]
+address = "0x0000000000000000000000000000000000000000000000000000000000000000"
+short_address = "0x0000...0000"
+email = "0x00000000@mail.openonion.ai"
+email_active = false
+created_at = "2025-09-14T11:34:41.644328"
+algorithm = "ed25519"
+default_model = "gpt-4o-mini"
+max_iterations = 10

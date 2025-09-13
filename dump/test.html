@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" />
+  <title>/process 调用演示</title>
+
+  <body>
+    <h3>发送到 /process 的字符串</h3>
+    <textarea id="input" rows="6" style="width:100%;"></textarea>
+    <br/>
+    <button id="send">Process</button>
+
+    <h3>响应结果</h3>
+    <pre id="out" style="background:#f6f8fa;padding:12px;white-space:pre-wrap;"></pre>
+
+    <script>
+      // 如果你的 Pydantic 模型不是 {"text": "..."}，改这里：
+      const payloadKey = "text";
+
+      // 如果后端不在同源（比如 http://localhost:8000 ），改这里：
+      // const API_BASE = "data.aichaosn.com"; // 例如 "http://127.0.0.1:8000"
+      const API_BASE = "http://localhost:8000"; // 例如 "http://127.0.0.1:8000"
+
+      async function callProcess() {
+        const out = document.getElementById('out');
+        out.textContent = "请求中…";
+
+        const value = document.getElementById('input').value || "";
+
+        try {
+          const res = await fetch(`${API_BASE}/process`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ [payloadKey]: value })
+          });
+
+          // 显示非 2xx 的错误（例如 422 代表请求体与模型不匹配）
+          if (!res.ok) {
+            const text = await res.text();
+            out.textContent = `HTTP ${res.status} ${res.statusText}\n\n${text}`;
+            return;
+          }
+
+          // 成功：把 JSON 漂亮地展示出来
+          const data = await res.json();
+          out.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          out.textContent = `请求失败：${err}`;
+        }
+      }
+
+      document.getElementById('send').addEventListener('click', callProcess);
+    </script>
+  </body>
+</html>
